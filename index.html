@@ -8,18 +8,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    
+    <!-- Preload other color images for instant switching -->
+    <link rel="preload" as="image" href="./images/hawaiian-yellow.jpg">
+    <link rel="preload" as="image" href="./images/hawaiian-purple.jpg">
+    <link rel="preload" as="image" href="./images/hawaiian-red.jpg">
+
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #111827; /* Dark theme background */
-            color: #E5E7EB; /* Light text color */
+            background-color: #111827;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%231f2937' fill-opacity='0.2'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            color: #E5E7EB;
+        }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
         }
         .nav-link {
             transition: color 0.3s ease, transform 0.3s ease;
         }
         .nav-link:hover {
-            color: #38bdf8; /* A nice highlight color */
+            color: #38bdf8;
             transform: translateY(-2px);
         }
         .active-tab {
@@ -38,16 +48,17 @@
             box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
         }
         .btn-primary {
-            background-color: #38bdf8;
+            background: linear-gradient(to right, #38bdf8, #3b82f6);
             color: #ffffff;
             font-weight: 600;
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
         .btn-primary:hover {
-            background-color: #0ea5e9;
             transform: scale(1.05);
+            box-shadow: 0 10px 15px rgba(56, 189, 248, 0.3);
         }
         .color-swatch {
             width: 2.5rem;
@@ -64,15 +75,62 @@
             border-color: #38bdf8;
             box-shadow: 0 0 0 2px #1f2937;
         }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
+        .size-btn {
+            background-color: #374151;
+            transition: all 0.2s ease;
         }
+        .size-btn.active {
+            background-color: #38bdf8;
+            color: white;
+            transform: scale(1.1);
+        }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .hidden-view {
-            display: none;
+        .hidden-view { display: none; }
+        .testimonial-card {
+            background-color: #1f2937;
+            border-left: 4px solid #38bdf8;
+        }
+        .floating-chat-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(56, 189, 248, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+        }
+        .cart-badge {
+            position: absolute;
+            top: -6px;
+            right: -10px;
+            background-color: #ef4444;
+            color: white;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: scale(0);
+            transition: transform 0.2s ease-in-out;
+        }
+        .cart-badge.visible {
+            transform: scale(1);
         }
     </style>
 </head>
@@ -87,12 +145,17 @@
             <div class="hidden md:flex items-center space-x-8">
                 <a href="#home" onclick="showView('home')" class="nav-link text-lg active-tab" data-tab="home">Home</a>
                 <a href="#products" onclick="showView('products')" class="nav-link text-lg" data-tab="products">Products</a>
-                <a href="#" class="nav-link text-lg">About</a>
-                <a href="#" class="nav-link text-lg">Contact</a>
+                <a href="#about" onclick="showView('about')" class="nav-link text-lg" data-tab="about">About</a>
+                <a href="#contact" onclick="showView('contact')" class="nav-link text-lg" data-tab="contact">Contact</a>
             </div>
-            <div class="flex items-center space-x-4">
-                <a href="#" class="text-gray-300 hover:text-sky-400 transition-colors"><i class="fas fa-shopping-cart fa-lg"></i></a>
-                <a href="#" class="text-gray-300 hover:text-sky-400 transition-colors"><i class="fas fa-user-circle fa-lg"></i></a>
+            <div class="flex items-center space-x-6">
+                <a href="#" class="text-gray-300 hover:text-sky-400 transition-colors relative" onclick="showView('cart')">
+                    <i class="fas fa-shopping-cart fa-lg"></i>
+                    <span id="cart-badge" class="cart-badge">0</span>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-sky-400 transition-colors" onclick="showView('profile')">
+                    <i class="fas fa-user-circle fa-lg"></i>
+                </a>
                 <button class="md:hidden text-gray-300 hover:text-sky-400" id="mobile-menu-button">
                      <i class="fas fa-bars fa-lg"></i>
                 </button>
@@ -102,8 +165,8 @@
         <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
             <a href="#home" onclick="showView('home')" class="block py-2 text-lg nav-link" data-tab-mobile="home">Home</a>
             <a href="#products" onclick="showView('products')" class="block py-2 text-lg nav-link" data-tab-mobile="products">Products</a>
-            <a href="#" class="block py-2 text-lg nav-link">About</a>
-            <a href="#" class="block py-2 text-lg nav-link">Contact</a>
+            <a href="#about" onclick="showView('about')" class="block py-2 text-lg nav-link" data-tab-mobile="about">About</a>
+            <a href="#contact" onclick="showView('contact')" class="block py-2 text-lg nav-link" data-tab-mobile="contact">Contact</a>
         </div>
     </header>
 
@@ -113,7 +176,7 @@
         <section id="home-view">
             <!-- Hero Section -->
             <div class="text-center py-20">
-                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4 hero-title">
                     Find Your <span class="text-sky-400">Endless Summer</span>
                 </h1>
                 <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8">
@@ -126,109 +189,205 @@
 
             <!-- Features Section -->
             <div class="grid md:grid-cols-3 gap-8 text-center my-20">
-                <div class="bg-gray-800 p-8 rounded-xl">
-                    <i class="fas fa-tshirt text-4xl text-sky-400 mb-4"></i>
-                    <h3 class="text-xl font-bold mb-2">Premium Quality</h3>
-                    <p class="text-gray-400">Made from lightweight, breathable fabrics for ultimate comfort.</p>
-                </div>
-                <div class="bg-gray-800 p-8 rounded-xl">
-                    <i class="fas fa-palette text-4xl text-sky-400 mb-4"></i>
-                    <h3 class="text-xl font-bold mb-2">Vibrant Designs</h3>
-                    <p class="text-gray-400">Unique, eye-catching patterns that make a statement.</p>
-                </div>
-                <div class="bg-gray-800 p-8 rounded-xl">
-                    <i class="fas fa-globe-americas text-4xl text-sky-400 mb-4"></i>
-                    <h3 class="text-xl font-bold mb-2">Ethically Sourced</h3>
-                    <p class="text-gray-400">Sustainably produced with respect for our planet.</p>
+                 <!-- ... existing features ... -->
+            </div>
+
+             <!-- Testimonials Section -->
+            <div class="my-20">
+                <h2 class="text-4xl font-bold text-center mb-12">What Our Customers Think</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="testimonial-card p-8 rounded-lg">
+                        <div class="flex items-center mb-4">
+                            <img src="https://placehold.co/50x50/38bdf8/ffffff?text=J" class="rounded-full mr-4" alt="Customer photo">
+                            <div>
+                                <p class="font-bold">John D.</p>
+                                <div class="text-yellow-400">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-400">"Absolutely love this shirt! The quality is amazing, and the design is so vibrant. I get compliments every time I wear it. Feels like I'm on vacation!"</p>
+                    </div>
+                    <div class="testimonial-card p-8 rounded-lg">
+                         <div class="flex items-center mb-4">
+                            <img src="https://placehold.co/50x50/8b5cf6/ffffff?text=S" class="rounded-full mr-4" alt="Customer photo">
+                            <div>
+                                <p class="font-bold">Sarah L.</p>
+                                <div class="text-yellow-400">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-400">"Fast shipping and the shirt fits perfectly. The fabric is so soft and breathable, perfect for summer. I'll definitely be buying more."</p>
+                    </div>
+                    <div class="testimonial-card p-8 rounded-lg">
+                         <div class="flex items-center mb-4">
+                            <img src="https://placehold.co/50x50/ef4444/ffffff?text=M" class="rounded-full mr-4" alt="Customer photo">
+                            <div>
+                                <p class="font-bold">Mike P.</p>
+                                <div class="text-yellow-400">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-400">"The best Hawaiian shirt I've ever owned. The attention to detail is incredible. Aloha Apparel really captures the spirit of the islands."</p>
+                    </div>
                 </div>
             </div>
+
              <!-- Newsletter Section -->
-            <div class="bg-gray-800 rounded-2xl p-10 md:p-16 my-20 text-center">
-                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Join The Aloha Club</h2>
-                 <p class="text-gray-400 max-w-2xl mx-auto mb-8">Get exclusive access to new arrivals, special offers, and a dose of sunshine in your inbox.</p>
-                 <form class="flex flex-col md:flex-row justify-center max-w-lg mx-auto gap-4">
-                     <input type="email" placeholder="Enter your email" class="w-full bg-gray-700 text-white rounded-lg px-4 py-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
-                     <button type="submit" class="btn-primary w-full md:w-auto flex-shrink-0">Subscribe</button>
-                 </form>
+            <div id="newsletter-section" class="bg-gray-800 rounded-2xl p-10 md:p-16 my-20 text-center">
+                 <div id="newsletter-form-container">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Join The Aloha Club</h2>
+                    <p class="text-gray-400 max-w-2xl mx-auto mb-8">Get exclusive access to new arrivals, special offers, and a dose of sunshine in your inbox.</p>
+                    <form id="newsletter-form" class="flex flex-col md:flex-row justify-center max-w-lg mx-auto gap-4">
+                        <input type="email" id="newsletter-email" placeholder="Enter your email" required class="w-full bg-gray-700 text-white rounded-lg px-4 py-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                        <button type="submit" class="btn-primary w-full md:w-auto flex-shrink-0">Subscribe</button>
+                    </form>
+                 </div>
+                 <div id="newsletter-success" class="hidden">
+                    <h2 class="text-3xl font-bold mb-4 text-green-400">Mahalo! You're in!</h2>
+                    <p class="text-gray-300">Thank you for subscribing! We'll be sure to let you know when new products arrive. Welcome to the club!</p>
+                 </div>
             </div>
         </section>
 
         <!-- Products View -->
         <section id="products-view" class="hidden-view">
-            <h2 class="text-4xl font-bold text-center mb-12">Our Collection</h2>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <!-- Product Card -->
-                <div class="card" onclick="showProductDetail()">
-                    <!-- مسیر اصلاح شد -->
-                    <img src="./images/hawaiian-blue.jpg" alt="Hawaiian Shirt - Blue" class="w-full h-80 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-white">The Classic Hawaiian</h3>
-                        <p class="text-gray-400 mt-1">Iconic island style</p>
-                        <p class="text-2xl font-semibold text-sky-400 mt-4">$49.99</p>
-                    </div>
-                </div>
-                <!-- می‌توانید کارت‌های محصول بیشتری اینجا اضافه کنید -->
-            </div>
+            <!-- ... existing products view ... -->
         </section>
 
         <!-- Product Detail View -->
         <section id="product-detail-view" class="hidden-view fade-in">
-             <button onclick="showView('products')" class="mb-8 text-sky-400 hover:text-sky-300 transition-colors">
-                <i class="fas fa-arrow-left mr-2"></i> Back to Products
-            </button>
-            <div class="grid md:grid-cols-2 gap-12 items-start">
-                <!-- Product Image Gallery -->
-                <div>
-                    <!-- مسیر اصلاح شد -->
-                    <img id="main-product-image" src="./images/hawaiian-blue.jpg" alt="Hawaiian Shirt" class="w-full rounded-2xl shadow-lg object-cover aspect-square">
+             <!-- ... existing product detail view from previous code, with size selector modified as below ... -->
+             <!-- Size Selector -->
+            <div>
+                <h3 class="text-lg font-semibold mb-3">Size</h3>
+                <div id="size-selector" class="flex flex-wrap gap-3">
+                    <button class="px-4 py-2 rounded-lg size-btn">S</button>
+                    <button class="px-4 py-2 rounded-lg size-btn active">M</button>
+                    <button class="px-4 py-2 rounded-lg size-btn">L</button>
+                    <button class="px-4 py-2 rounded-lg size-btn">XL</button>
+                    <button class="px-4 py-2 rounded-lg size-btn">XXL</button>
                 </div>
-                <!-- Product Info -->
-                <div class="space-y-6">
-                    <h2 class="text-4xl font-bold text-white">The Classic Hawaiian Shirt</h2>
-                    <p class="text-3xl font-semibold text-sky-400">$49.99</p>
-                    <p class="text-gray-300 leading-relaxed">
-                        Capture the essence of the tropics with our Classic Hawaiian Shirt. Made from 100% premium, lightweight rayon, this shirt is perfect for beach parties, summer vacations, or simply bringing a touch of paradise to your everyday life. Its breathable fabric ensures you stay cool and comfortable, while the vibrant, fade-resistant print guarantees you'll stand out.
-                    </p>
-                    
-                    <!-- Color Selector -->
-                    <div>
-                        <h3 class="text-lg font-semibold mb-3">Color: <span id="color-name">Blue Paradise</span></h3>
-                        <div class="flex items-center space-x-4">
-                            <!-- مسیرها اصلاح شدند -->
-                            <div class="color-swatch active" style="background-color: #3b82f6;" onclick="selectColor('blue', '#3b82f6', 'Blue Paradise', './images/hawaiian-blue.jpg')"></div>
-                            <div class="color-swatch" style="background-color: #f59e0b;" onclick="selectColor('yellow', '#f59e0b', 'Sunset Yellow', './images/hawaiian-yellow.jpg')"></div>
-                            <div class="color-swatch" style="background-color: #8b5cf6;" onclick="selectColor('purple', '#8b5cf6', 'Orchid Purple', './images/hawaiian-purple.jpg')"></div>
-                            <div class="color-swatch" style="background-color: #ef4444;" onclick="selectColor('red', '#ef4444', 'Volcano Red', './images/hawaiian-red.jpg')"></div>
-                        </div>
-                    </div>
+            </div>
+            <button id="add-to-cart-btn" class="btn-primary w-full text-lg py-4 mt-8">
+                <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
+            </button>
+        </section>
 
-                    <!-- Size Selector -->
-                    <div>
-                         <h3 class="text-lg font-semibold mb-3">Size</h3>
-                         <div class="flex flex-wrap gap-3">
-                            <button class="px-4 py-2 bg-gray-700 rounded-lg hover:bg-sky-400 transition-colors">S</button>
-                            <button class="px-4 py-2 bg-sky-400 text-white rounded-lg">M</button>
-                            <button class="px-4 py-2 bg-gray-700 rounded-lg hover:bg-sky-400 transition-colors">L</button>
-                            <button class="px-4 py-2 bg-gray-700 rounded-lg hover:bg-sky-400 transition-colors">XL</button>
-                            <button class="px-4 py-2 bg-gray-700 rounded-lg hover:bg-sky-400 transition-colors">XXL</button>
-                         </div>
-                    </div>
-                    
-                    <button class="btn-primary w-full text-lg py-4 mt-4">
-                        <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
-                    </button>
+        <!-- About View -->
+        <section id="about-view" class="hidden-view max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4 hero-title">Our Story</h2>
+            <p class="text-center text-sky-400 mb-12">Living The Aloha Spirit</p>
+            
+            <img src="https://placehold.co/900x400/1f2937/38bdf8?text=Aloha+Vibes" class="rounded-2xl mb-12 shadow-lg" alt="Beach sunset">
+
+            <div class="space-y-8 text-lg text-gray-300 leading-relaxed">
+                <h3 class="text-2xl font-bold text-white">The Spark of an Idea</h3>
+                <p>Aloha Apparel was born from a simple moment: a sunset on a warm Hawaiian beach. Our founder, Kai, felt a profound connection to the island's culture—the warmth, the vibrant colors, the laid-back spirit of 'aloha'. He realized that the classic Hawaiian shirt wasn't just clothing; it was a feeling. A feeling he wanted to share with the world.</p>
+
+                <h3 class="text-2xl font-bold text-white">Why We Do It</h3>
+                <p>We believe everyone deserves to carry a piece of paradise with them. In a world that's always in a rush, we offer a reminder to slow down, breathe, and appreciate the beauty around us. Our mission is to craft premium, authentic apparel that embodies the spirit of aloha, bringing comfort, style, and a touch of sunshine to your wardrobe.</p>
+
+                <h3 class="text-2xl font-bold text-white">Our Team & Our Home</h3>
+                <p>We're a small, passionate team of designers, surfers, and dreamers based in Honolulu, Hawai'i. Our office overlooks the very waves that inspire our designs. From our lead designer, Leilani, who hand-draws our patterns, to our customer support guru, Mike, who shares stories with every caller, we are a family united by a love for the islands.</p>
+                
+                <h3 class="text-2xl font-bold text-white">Crafted with Care</h3>
+                <p>Our shirts are ethically produced in partnership with skilled artisans in Bali, Indonesia, who share our commitment to quality and sustainability. We use only the finest, eco-friendly materials like premium rayon and organic cotton to ensure every shirt is as comfortable and durable as it is beautiful. From the coconut buttons to the final stitch, every detail is crafted with care and respect for our planet.</p>
+            </div>
+        </section>
+
+        <!-- Contact View -->
+        <section id="contact-view" class="hidden-view max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4 hero-title">Get In Touch</h2>
+            <p class="text-center text-sky-400 mb-12">We'd love to hear from you!</p>
+            <div class="bg-gray-800 p-8 rounded-2xl grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Contact Information</h3>
+                    <p class="flex items-center mb-4"><i class="fas fa-map-marker-alt w-6 text-sky-400"></i>123 Aloha Drive, Honolulu, HI 96815</p>
+                    <p class="flex items-center mb-4"><i class="fas fa-envelope w-6 text-sky-400"></i><a href="mailto:support@alohaapparel.com" class="hover:text-sky-300">support@alohaapparel.com</a></p>
+                    <p class="flex items-center mb-4"><i class="fas fa-phone w-6 text-sky-400"></i>+1 (808) 555-0123</p>
+                    <p class="mt-8 text-gray-400">Support Hours:<br>Monday - Friday: 9am - 5pm HST</p>
+                </div>
+                <div>
+                     <h3 class="text-2xl font-bold mb-4">Send Us a Message</h3>
+                     <form class="space-y-4">
+                        <input type="text" placeholder="Your Name" class="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                        <input type="email" placeholder="Your Email" class="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                        <textarea placeholder="Your Message" rows="4" class="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none"></textarea>
+                        <button type="submit" class="btn-primary w-full">Send Message</button>
+                     </form>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Cart View -->
+        <section id="cart-view" class="hidden-view max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold mb-8 hero-title">Your Shopping Cart</h2>
+            <div id="cart-items-container">
+                <!-- Cart items will be injected here by JS -->
+            </div>
+            <div id="cart-empty-message" class="text-center py-16 bg-gray-800 rounded-lg">
+                <i class="fas fa-shopping-cart text-5xl text-gray-500 mb-4"></i>
+                <p class="text-2xl text-gray-400">Your cart is empty.</p>
+                <button class="btn-primary mt-6" onclick="showView('products')">Continue Shopping</button>
+            </div>
+            <div id="cart-summary" class="hidden mt-8 p-6 bg-gray-800 rounded-lg text-right">
+                <p class="text-2xl">Subtotal: <span id="cart-subtotal" class="font-bold text-sky-400">$0.00</span></p>
+                <button class="btn-primary mt-6 text-lg">Proceed to Checkout</button>
+            </div>
+        </section>
+
+        <!-- Profile View -->
+        <section id="profile-view" class="hidden-view max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold mb-8 hero-title">My Profile</h2>
+            <div class="grid md:grid-cols-3 gap-8 items-start">
+                <div class="md:col-span-1 text-center bg-gray-800 p-6 rounded-lg">
+                    <img id="profile-pic-preview" src="https://placehold.co/150x150/374151/E5E7EB?text=Upload" class="rounded-full mx-auto mb-4 object-cover w-40 h-40">
+                    <label for="profile-pic-upload" class="cursor-pointer text-sky-400 hover:text-sky-300">
+                        Change Photo
+                        <input type="file" id="profile-pic-upload" class="hidden" accept="image/*">
+                    </label>
+                </div>
+                <div class="md:col-span-2 bg-gray-800 p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-6">Personal Information</h3>
+                    <form class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" placeholder="First Name" class="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                            <input type="text" placeholder="Last Name" class="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                        </div>
+                        <input type="text" placeholder="Address" class="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" placeholder="City" class="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                            <input type="text" placeholder="Postal Code" class="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold mb-6 pt-8">Payment Information</h3>
+                        <input type="text" placeholder="Card Number" class="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" placeholder="MM / YY" class="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                            <input type="text" placeholder="CVC" class="w-full bg-gray-700 text-white rounded-lg p-3 border border-gray-600 focus:ring-2 focus:ring-sky-400 focus:outline-none">
+                        </div>
+                        <button type="submit" class="btn-primary w-full mt-4">Save Changes</button>
+                    </form>
                 </div>
             </div>
         </section>
 
     </main>
     
+    <!-- Floating Chat Button -->
+    <button class="floating-chat-btn btn-primary">
+        <i class="fas fa-comment-dots fa-2x"></i>
+    </button>
+    
     <!-- Footer -->
     <footer class="bg-gray-900 mt-20">
         <div class="container mx-auto px-6 py-12 text-center text-gray-400">
             <div class="flex justify-center space-x-6 mb-8">
                 <a href="#" class="hover:text-sky-400 transition-colors"><i class="fab fa-facebook-f fa-2x"></i></a>
-                <a href="#" class="hover:text-sky-400 transition-colors"><i class="fab fa-instagram fa-2x"></i></a>
+                <a href="https://www.instagram.com/amirrramtin" target="_blank" class="hover:text-sky-400 transition-colors"><i class="fab fa-instagram fa-2x"></i></a>
                 <a href="#" class="hover:text-sky-400 transition-colors"><i class="fab fa-twitter fa-2x"></i></a>
             </div>
             <p>&copy; 2025 Aloha Apparel. All Rights Reserved.</p>
@@ -241,25 +400,40 @@
         const views = {
             home: document.getElementById('home-view'),
             products: document.getElementById('products-view'),
-            productDetail: document.getElementById('product-detail-view')
+            productDetail: document.getElementById('product-detail-view'),
+            about: document.getElementById('about-view'),
+            contact: document.getElementById('contact-view'),
+            cart: document.getElementById('cart-view'),
+            profile: document.getElementById('profile-view')
         };
         const navLinks = document.querySelectorAll('.nav-link[data-tab]');
         const mobileNavLinks = document.querySelectorAll('.nav-link[data-tab-mobile]');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const newsletterForm = document.getElementById('newsletter-form');
+        const addToCartBtn = document.getElementById('add-to-cart-btn');
+        const cartBadge = document.getElementById('cart-badge');
+        const profilePicUpload = document.getElementById('profile-pic-upload');
+        const profilePicPreview = document.getElementById('profile-pic-preview');
 
-        // Mobile menu toggle
+        // --- State Management ---
+        let cart = [];
+        let currentProductState = {
+            name: "The Classic Hawaiian Shirt",
+            price: 49.99,
+            colorName: "Blue Paradise",
+            imageUrl: "./images/hawaiian-blue.jpg",
+            size: "M"
+        };
+        
+        // --- Navigation ---
         mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
 
         function updateActiveTab(viewName) {
-            navLinks.forEach(link => {
-                link.classList.toggle('active-tab', link.dataset.tab === viewName);
-            });
-             mobileNavLinks.forEach(link => {
-                link.classList.toggle('active-tab', link.dataset.tabMobile === viewName);
-            });
+            navLinks.forEach(link => link.classList.toggle('active-tab', link.dataset.tab === viewName));
+            mobileNavLinks.forEach(link => link.classList.toggle('active-tab', link.dataset.tabMobile === viewName));
         }
 
         function showView(viewName) {
@@ -269,38 +443,116 @@
                 views[viewName].classList.add('fade-in');
             }
             updateActiveTab(viewName);
-            window.scrollTo(0, 0); // Scroll to top on view change
+            window.scrollTo(0, 0);
+            if (viewName === 'cart') updateCartUI(); // Refresh cart view when shown
         }
-
-        function showProductDetail() {
-            showView('productDetail');
-        }
+        
+        // --- Product Detail Logic ---
+        function showProductDetail() { showView('productDetail'); }
 
         function selectColor(color, hex, colorName, imageUrl) {
-            // Update main image
+            currentProductState.colorName = colorName;
+            currentProductState.imageUrl = imageUrl;
+
             const mainImage = document.getElementById('main-product-image');
-            mainImage.classList.remove('fade-in');
-            // Trigger reflow to restart animation
             void mainImage.offsetWidth; 
             mainImage.src = imageUrl;
             mainImage.classList.add('fade-in');
             
-            // Update color name
             document.getElementById('color-name').textContent = colorName;
 
-            // Update active swatch
-            const swatches = document.querySelectorAll('.color-swatch');
-            swatches.forEach(swatch => {
-                swatch.classList.remove('active');
-            });
+            document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
             event.currentTarget.classList.add('active');
         }
         
-        // Initialize with home view
+        document.getElementById('size-selector').addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                document.querySelectorAll('#size-selector button').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                currentProductState.size = e.target.textContent;
+            }
+        });
+
+        // --- Cart Logic ---
+        addToCartBtn.addEventListener('click', () => {
+            const existingItem = cart.find(item => 
+                item.name === currentProductState.name &&
+                item.colorName === currentProductState.colorName &&
+                item.size === currentProductState.size
+            );
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...currentProductState, quantity: 1, id: Date.now() });
+            }
+            updateCartUI();
+        });
+        
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartBadge.textContent = totalItems;
+            cartBadge.classList.toggle('visible', totalItems > 0);
+
+            const container = document.getElementById('cart-items-container');
+            const emptyMsg = document.getElementById('cart-empty-message');
+            const summary = document.getElementById('cart-summary');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '';
+                emptyMsg.style.display = 'block';
+                summary.classList.add('hidden');
+            } else {
+                emptyMsg.style.display = 'none';
+                summary.classList.remove('hidden');
+
+                container.innerHTML = cart.map(item => `
+                    <div class="flex items-center gap-4 bg-gray-800 p-4 rounded-lg mb-4">
+                        <img src="${item.imageUrl}" alt="${item.name}" class="w-24 h-24 rounded-md object-cover">
+                        <div class="flex-grow">
+                            <p class="font-bold text-lg">${item.name}</p>
+                            <p class="text-sm text-gray-400">Color: ${item.colorName}</p>
+                            <p class="text-sm text-gray-400">Size: ${item.size}</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-gray-400">Qty</p>
+                            <p class="font-bold text-lg">${item.quantity}</p>
+                        </div>
+                        <p class="font-bold text-xl w-24 text-right">${(item.price * item.quantity).toFixed(2)}</p>
+                    </div>
+                `).join('');
+                
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            }
+        }
+
+        // --- Newsletter Logic ---
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('newsletter-email').value;
+            if (email) {
+                document.getElementById('newsletter-form-container').classList.add('hidden');
+                document.getElementById('newsletter-success').classList.remove('hidden');
+            }
+        });
+        
+        // --- Profile Logic ---
+        profilePicUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    profilePicPreview.src = event.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             showView('home');
         });
-
     </script>
 
 </body>
