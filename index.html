@@ -159,14 +159,15 @@
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 <!-- Product Card -->
                 <div class="card" onclick="showProductDetail()">
-                    <img src="https://images.unsplash.com/photo-1572112481293-2d79a266a236?q=80&w=1887&auto=format&fit=crop" alt="Hawaiian Shirt - Blue" class="w-full h-80 object-cover">
+                    <!-- مسیر اصلاح شد -->
+                    <img src="./images/hawaiian-blue.jpg" alt="Hawaiian Shirt - Blue" class="w-full h-80 object-cover">
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-white">The Classic Hawaiian</h3>
                         <p class="text-gray-400 mt-1">Iconic island style</p>
                         <p class="text-2xl font-semibold text-sky-400 mt-4">$49.99</p>
                     </div>
                 </div>
-                <!-- Add more product cards here -->
+                <!-- می‌توانید کارت‌های محصول بیشتری اینجا اضافه کنید -->
             </div>
         </section>
 
@@ -178,7 +179,8 @@
             <div class="grid md:grid-cols-2 gap-12 items-start">
                 <!-- Product Image Gallery -->
                 <div>
-                    <img id="main-product-image" src="https://images.unsplash.com/photo-1572112481293-2d79a266a236?q=80&w=1887&auto=format&fit=crop" alt="Hawaiian Shirt" class="w-full rounded-2xl shadow-lg object-cover aspect-square">
+                    <!-- مسیر اصلاح شد -->
+                    <img id="main-product-image" src="./images/hawaiian-blue.jpg" alt="Hawaiian Shirt" class="w-full rounded-2xl shadow-lg object-cover aspect-square">
                 </div>
                 <!-- Product Info -->
                 <div class="space-y-6">
@@ -192,10 +194,11 @@
                     <div>
                         <h3 class="text-lg font-semibold mb-3">Color: <span id="color-name">Blue Paradise</span></h3>
                         <div class="flex items-center space-x-4">
-                            <div class="color-swatch active" style="background-color: #3b82f6;" onclick="selectColor('blue', '#3b82f6', 'Blue Paradise', 'https://images.unsplash.com/photo-1572112481293-2d79a266a236?q=80&w=1887&auto=format&fit=crop')"></div>
-                            <div class="color-swatch" style="background-color: #f59e0b;" onclick="selectColor('yellow', '#f59e0b', 'Sunset Yellow', 'https://images.unsplash.com/photo-1602992484414-e5988c56788e?q=80&w=1887&auto=format&fit=crop')"></div>
-                            <div class="color-swatch" style="background-color: #8b5cf6;" onclick="selectColor('purple', '#8b5cf6', 'Orchid Purple', 'https://images.unsplash.com/photo-1594938294742-167a5b399120?q=80&w=1887&auto=format&fit=crop')"></div>
-                            <div class="color-swatch" style="background-color: #ef4444;" onclick="selectColor('red', '#ef4444', 'Volcano Red', 'https://images.unsplash.com/photo-1594938294626-43b67b140a32?q=80&w=1887&auto=format&fit=crop')"></div>
+                            <!-- مسیرها اصلاح شدند -->
+                            <div class="color-swatch active" style="background-color: #3b82f6;" onclick="selectColor('blue', '#3b82f6', 'Blue Paradise', './images/hawaiian-blue.jpg')"></div>
+                            <div class="color-swatch" style="background-color: #f59e0b;" onclick="selectColor('yellow', '#f59e0b', 'Sunset Yellow', './images/hawaiian-yellow.jpg')"></div>
+                            <div class="color-swatch" style="background-color: #8b5cf6;" onclick="selectColor('purple', '#8b5cf6', 'Orchid Purple', './images/hawaiian-purple.jpg')"></div>
+                            <div class="color-swatch" style="background-color: #ef4444;" onclick="selectColor('red', '#ef4444', 'Volcano Red', './images/hawaiian-red.jpg')"></div>
                         </div>
                     </div>
 
@@ -302,3 +305,4 @@
 
 </body>
 </html>
+
